@@ -1,0 +1,4 @@
+oracle/
+.idea/
+node_modules/
+deploy.js
