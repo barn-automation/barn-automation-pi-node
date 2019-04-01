@@ -13,7 +13,7 @@
     "child-process-promise": "^2.2.1",
     "minimist": "^1.2.0",
     "node-raspistill": "0.0.16",
-    "node-rdkafka": "^2.4.2",
+    "oci-node-sdk": "file:./lib/oci-node-sdk",
     "node-ssh": "^5.1.2",
     "requirejs": "^2.3.6",
     "rpi-gpio": "^2.1.2",

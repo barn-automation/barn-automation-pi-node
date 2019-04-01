@@ -2,3 +2,7 @@ oracle/
 .idea/
 node_modules/
 deploy.js
+.oci
+lib/oci-node-sdk/conf
+lib/oci-node-sdk/docs
+lib/oci-node-sdk/jsdoc-template

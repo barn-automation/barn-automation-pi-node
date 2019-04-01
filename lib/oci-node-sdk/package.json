@@ -1,0 +1,26 @@
+{
+  "name": "oci-node-sdk",
+  "version": "0.1.73",
+  "description": "An (unofficial) Node SDK for interacting with the Oracle Cloud REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "documentation": "jsdoc -r ./src -c conf/jsdoc.json -R README.md"
+  },
+  "keywords": [
+    "oracle",
+    "cloud",
+    "oci",
+    "sdk",
+    "rest",
+    "api"
+  ],
+  "author": "todd.sharp@oracle.com",
+  "license": "ISC",
+  "dependencies": {
+    "http-signature": "^1.2.0",
+    "ini": "^1.3.5",
+    "jssha": "^2.3.1",
+    "sshpk": "^1.16.1"
+  }
+}
