@@ -8,6 +8,7 @@ module.exports = class CameraService{
     constructor(config, messageProducer) {
         this.config = config;
         this.producer = messageProducer;
+        this.isCapturing = false;
         this.camera = new Raspistill({
             noFileSave: true,
             horizontalFlip: true,
@@ -27,29 +28,36 @@ module.exports = class CameraService{
 
     snapStoreBroadcast() {
         const key = uuid();
-        this.camera.takePhoto().then((photo) => {
-            this.s3.upload({
-                Key: key,
-                Body: photo,
-                ACL: 'public-read',
-                ContentType: 'image/jpeg',
-            }, (err, data) => {
-                if (err) console.error(err);
-                try{
-                    console.log(`Image saved at ${data.Location}`);
-                    this.producer.send({
-                        type: "CAMERA_0",
-                        data: {
-                            takenAt: new Date(),
-                            key: data.key
-                        }
-                    });
-                }
-                catch (e) {
+        if( !this.isCapturing ) {
+            this.isCapturing = true
+            this.camera.takePhoto().then((photo) => {
+                this.s3.upload({
+                    Key: key,
+                    Body: photo,
+                    ACL: 'public-read',
+                    ContentType: 'image/jpeg',
+                }, (err, data) => {
+                    if (err) console.error(err);
+                    try{
+                        console.log(`Image saved at ${data.Location}`);
+                        this.producer.send({
+                            type: "CAMERA_0",
+                            data: {
+                                takenAt: new Date(),
+                                key: data.key
+                            }
+                        });
+                        this.isCapturing = false;
+                    }
+                    catch (e) {
 
-                }
+                    }
+                });
             });
-        });
+        }
+        else {
+            console.log('Snapshot request ignored.  Capture already in progress.')
+        }
     }
 
 }

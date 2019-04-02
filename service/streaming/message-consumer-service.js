@@ -8,15 +8,17 @@ const configAuthProvider = new ConfigFileAuthProvider(process.env.OCI_CONFIG_PAT
 
 module.exports = class MessageConsumer {
 
-    constructor(streamId, arduinoService) {
+    constructor(streamId, cameraService, arduinoService) {
         this.streamId = streamId;
         this.arduinoService = arduinoService;
+        this.cameraService = cameraService;
         this.client = new StreamingClient(configAuthProvider, 'us-phoenix-1');
     }
 
     start() {
         const createGroupCursorDetails = new CreateGroupCursorDetails('TRIM_HORIZON', 'group-0', null, null, null, true);
         const createGroupCursorRequest = new CreateGroupCursorRequest(this.streamId, createGroupCursorDetails);
+        console.log(`Consuming stream ${this.streamId}`)
         this.client.createGroupCursor(createGroupCursorRequest)
             .then((cursorResult) => {
                 const getMessagesRequest = new GetMessagesRequest(this.streamId, cursorResult.body.value);
@@ -31,6 +33,11 @@ module.exports = class MessageConsumer {
                                         console.log(`[INFO] Received: `, msg);
                                         let arduinoMessage = new ArduinoMessage(msg.type, msg.message);
                                         this.arduinoService.send(arduinoMessage);
+                                        switch (msg.type) {
+                                            case ArduinoMessage.CAMERA_0:
+                                                this.cameraService.snapStoreBroadcast()
+                                                break;
+                                        }
                                     }
                                     catch(ex) {
                                         console.error(ex);

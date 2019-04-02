@@ -38,10 +38,10 @@ if( !config.accessToken || !config.secretKey ) {
 
 /* start app */
 const producer = new MessageProducer(config.outgoingStreamId);
-const arduinoService = new ArduinoService(config.serialPort, config.debugArduinoSerial, producer);
-const consumer = new MessageConsumer(config.incomingStreamId, arduinoService);
-consumer.start();
 const cameraService = new CameraService(storageConfig, producer);
+const arduinoService = new ArduinoService(config.serialPort, config.debugArduinoSerial, producer);
+const consumer = new MessageConsumer(config.incomingStreamId, cameraService, arduinoService);
+consumer.start();
 const gpioService = new GpioService(config.gpioEnabled, cameraService);
 gpioService.listen();
 
