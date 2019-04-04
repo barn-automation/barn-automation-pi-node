@@ -12,13 +12,13 @@ module.exports = class MessageProducer {
         this.client = new StreamingClient(configAuthProvider, 'us-phoenix-1');
     }
 
-    send(msg) {
+    send(msgs) {
         const messages = [];
-        messages.push( new PutMessagesDetailsEntry( Buffer.from(JSON.stringify(msg)).toString('base64') ) );
-
+        msgs.forEach((msg) => {
+            messages.push( new PutMessagesDetailsEntry( Buffer.from(JSON.stringify(msg)).toString('base64') ) );
+        });
         const putMessagesDetails = new PutMessagesDetails(messages);
         const putMessagesRequest = new PutMessagesRequest(this.streamId, putMessagesDetails);
-
         this.client.putMessages(putMessagesRequest)
             .then((putMessageResult) => {
                 console.log(`[INFO] Publishing new message...`)

@@ -17,10 +17,8 @@ module.exports = class ArduinoService {
             try {
                 parsed = JSON.parse(data.toString('utf8'))
                 if( this.debug ) console.log('Message-->', parsed);
-                parsed.messages.forEach( (msg) => {
-                    if( this.debug ) console.log(`[INFO] ${new Date().getTime()} Sending--->`, msg);
-                    this.producer.send(msg)
-                });
+                if( this.debug ) console.log(`[INFO] ${new Date().getTime()} Sending--->`, msg);
+                this.producer.send(parsed.messages)
             }
             catch (e) {
                 console.warn('Could not parse', e);
