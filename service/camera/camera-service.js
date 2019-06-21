@@ -5,14 +5,15 @@ const Raspistill = require('node-raspistill').Raspistill;
 
 module.exports = class CameraService{
 
-    constructor(config, messageProducer) {
+    constructor(config, messageProducer, cameraProducer) {
         this.config = config;
         this.producer = messageProducer;
+        this.cameraProducer = cameraProducer;
         this.isCapturing = false;
         this.camera = new Raspistill({
             noFileSave: true,
-            horizontalFlip: true,
-            verticalFlip: true,
+            horizontalFlip: false,
+            verticalFlip: false,
         });
         AWS.config.update({
             region: config.storageRegion,
@@ -40,13 +41,15 @@ module.exports = class CameraService{
                     if (err) console.error(err);
                     try{
                         console.log(`Image saved at ${data.Location}`);
-                        this.producer.send({
+                        const msg = {
                             type: "CAMERA_0",
                             data: {
                                 takenAt: new Date(),
                                 key: data.key
                             }
-                        });
+                        }
+                        this.producer.send([msg]);
+                        this.cameraProducer.send([msg]);
                         this.isCapturing = false;
                     }
                     catch (e) {

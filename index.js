@@ -17,6 +17,7 @@ config.storageTenancy = "toddrsharp";
 config.storageUrl = `${config.storageTenancy}.compat.objectstorage.${config.storageRegion}.oraclecloud.com`;
 config.storageBucket = "barn-captures";
 config.outgoingStreamId = "ocid1.stream.oc1.phx.aaaaaaaad5puzckqz7r6ty72c7dkw7koqbtoo2uh4g53ww5lpvd6gplcpqba";
+config.cameraStreamId = "ocid1.stream.oc1.phx.aaaaaaaadql6qpnaoblgfov4wdtw36xx5y6kze5l4mwyqrx46kdjclcw5d2a";
 config.incomingStreamId = "ocid1.stream.oc1.phx.aaaaaaaatu2umvjwt7jybgxrjbkdpsjasl7xyrmzcnw62rsw3e6r6rlpakmq";
 
 config = Object.assign(config, argv);
@@ -38,7 +39,8 @@ if( !config.accessToken || !config.secretKey ) {
 
 /* start app */
 const producer = new MessageProducer(config.outgoingStreamId);
-const cameraService = new CameraService(storageConfig, producer);
+const cameraProducer = new MessageProducer(config.cameraStreamId);
+const cameraService = new CameraService(storageConfig, producer, cameraProducer);
 const arduinoService = new ArduinoService(config.serialPort, config.debugArduinoSerial, producer);
 const consumer = new MessageConsumer(config.incomingStreamId, cameraService, arduinoService);
 consumer.start();
