@@ -11,7 +11,7 @@
   "dependencies": {
     "aws-sdk": "^2.368.0",
     "child-process-promise": "^2.2.1",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "node-raspistill": "0.0.16",
     "node-rdkafka": "^2.4.2",
     "node-ssh": "^5.1.2",
