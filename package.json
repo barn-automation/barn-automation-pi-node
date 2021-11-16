@@ -9,7 +9,7 @@
   "author": "todd.sharp@oracle.com",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.368.0",
+    "aws-sdk": "^2.814.0",
     "child-process-promise": "^2.2.1",
     "minimist": "^1.2.0",
     "node-raspistill": "0.0.16",
